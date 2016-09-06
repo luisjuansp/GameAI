@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/chessboard-0.3.0.css">
+  	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<title>ChessTest</title>
+</head>
+<body>
+	<div class="center">
+		<div id="board1" style="width: 400px"></div>
+		<br>
+		<div class="center">
+			<button type="button" onclick="move()">Reset!</button>
+		</div>
+	</div>
+	<script src="js/chessboard-0.3.0.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script>
+		var board1 = ChessBoard('board1', 'start');
+		var timeout = setInterval(function(){
+			$.ajax({url: "/move", success: function(result){
+                                if(result.gameOver){
+					stopInt();
+				}
+                                board1.position(result.move);
+                        	}});
+			 }, 20);
+		
+		function stopInt(){
+			clearInterval(timeout);
+		}
+			
+		function move(){
+			//console.log("move");
+			$.ajax({url: "/reset", success: function(result){
+				//console.log(result);
+        			board1.position(result.move);
+				clearInterval(timeout);
+				timeout = setInterval(function(){
+		                        $.ajax({url: "/move", success: function(result){
+                                	if(result.gameOver){
+                                        	stopInt();
+                                	}
+                                	board1.position(result.move);
+                                	}});
+                         	}, 250);
+    			}});
+		}
+	</script>
+</body>
+</html>
