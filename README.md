@@ -9,7 +9,7 @@ Basic MinMax algorithm with Alpha Beta optimization in [alphabeta.js].
 ```js
 function chooseBest(node, depth, functions)
 ```
-**++Returns++** the node with the best move available
+**Returns** the node with the best move available
 - node: initial node to expand
 - depth: number of levels to expand, <=0 means infinite
 - functions: object with the required functions:
