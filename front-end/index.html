@@ -2,9 +2,9 @@
 
 <html lang="en">
 <head>
-  	<meta charset="utf-8">
+	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="css/chessboard-0.3.0.css">
-  	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
 	<title>ChessTest</title>
 </head>
 <body>
@@ -18,36 +18,27 @@
 	<script src="js/chessboard-0.3.0.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script>
-		var board1 = ChessBoard('board1', 'start');
-		var timeout = setInterval(function(){
-			$.ajax({url: "/move", success: function(result){
-                                if(result.gameOver){
-					stopInt();
-				}
-                                board1.position(result.move);
-                        	}});
-			 }, 20);
-		
-		function stopInt(){
-			clearInterval(timeout);
-		}
-			
-		function move(){
+	var board1 = ChessBoard('board1', 'start');
+	var call = function(){
+		console.log("send");
+		$.ajax({url: "/move", success: function(result){
+			console.log("receive");
+			board1.position(result.move);
+			if(!result.gameOver){
+				setTimeout(call , 20);
+			}
+		}});
+	}
+	call();
+
+	function move(){
 			//console.log("move");
 			$.ajax({url: "/reset", success: function(result){
 				//console.log(result);
-        			board1.position(result.move);
-				clearInterval(timeout);
-				timeout = setInterval(function(){
-		                        $.ajax({url: "/move", success: function(result){
-                                	if(result.gameOver){
-                                        	stopInt();
-                                	}
-                                	board1.position(result.move);
-                                	}});
-                         	}, 250);
-    			}});
+				board1.position(result.move);
+				call();
+			}});
 		}
-	</script>
-</body>
-</html>
+		</script>
+	</body>
+	</html>

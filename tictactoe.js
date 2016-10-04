@@ -1,5 +1,5 @@
 /*
- * TicTacToe game run aided by the AlphaBeta implemetation
+ * TicTacToe game test aided by the AlphaBeta implemetation
  *
  * Created by: Luis Juan Sanchez, 04/09/2016
  */
@@ -56,7 +56,7 @@ while(!game.gameOver()){
 
 	game.baseTurn = game.turn();
 	//access the last move saves in getChildren
-	var move = alphabeta.chooseBest(game, -1, functions).last;
+	var move = alphabeta(game, -1, functions).last;
 
 	console.log(move);
 

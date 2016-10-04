@@ -7,119 +7,13 @@
  */
 
 var express = require('express');
-var Chess = require('chess.js').Chess;
+var Chess = require('./games/Chess.js');
 var alphabeta = require('./AI/alphabeta.js');
 
 var app = express();
 app.use("/js", express.static(__dirname + '/front-end/js'));
 app.use("/img", express.static(__dirname + '/front-end/img'));
 app.use("/css", express.static(__dirname + '/front-end/css'));
-
-var getChildren = function (chess) {
-	var nodes = [];
-	var moves = chess.moves();
-	for (var i = 0; i < moves.length; i++) {
-		var temp = new Chess(chess.fen());
-		temp.last = moves[i];
-		temp.baseTurn = chess.baseTurn;
-		temp.move(moves[i]);
-		nodes.push(temp);
-	};
-	return nodes;
-}
-
-var terminal = function (chess) {
-	return chess.game_over();
-}
-
-var utility = function (chess) {
-	if(chess.game_over()){
-		if (chess.turn() == chess.baseTurn) return -5000;
-		else return 5000;
-	}
-	var fenstr = chess.fen()
-	var fenarr = fenstr.split(" ");
-	// console.log(fenarr[1]);
-	var value = 0;
-	if(chess.baseTurn == 'w'){
-		for(var i = 0; i < fenarr[0].length; i++){
-			switch(fenarr[0][i]){
-				case "Q":
-				value += 500;
-				break;
-				case "B":
-				value += 250;
-				break;
-				case "N":
-				value += 250;
-				break;
-				case "R":
-				value += 250;
-				break;
-				case "P":
-				value += 10;
-				break;
-				case "q":
-				value -= 500;
-				break;
-				case "b":
-				value -= 250;
-				break;
-				case "n":
-				value -= 250;
-				break;
-				case "r":
-				value -= 250;
-				break;
-				case "p":
-				value -= 10;
-				break;
-			}
-		}
-	} else {
-		for(var i = 0; i < fenarr[0].length; i++){
-			switch(fenarr[0][i]){
-				case "Q":
-				value -= 500;
-				break;
-				case "B":
-				value -= 250;
-				break;
-				case "N":
-				value -= 250;
-				break;
-				case "R":
-				value -= 250;
-				break;
-				case "P":
-				value -= 10;
-				break;
-				case "q":
-				value += 500;
-				break;
-				case "b":
-				value += 250;
-				break;
-				case "n":
-				value += 250;
-				break;
-				case "r":
-				value += 250;
-				break;
-				case "p":
-				value += 10;
-				break;
-			}
-		}
-	}
-	return value;
-};
-
-var functions = {
-	getChildren: getChildren,
-	terminal: terminal,
-	utility: utility
-};
 
 var chess = new Chess();
 
@@ -133,7 +27,7 @@ app.get('/move', function(req, res){
   	if(!chess.game_over()){
   		console.log(chess.turn());
   		chess.baseTurn = chess.turn();
-  		var move = alphabeta.chooseBest(chess, 2, functions).last;
+  		var move = alphabeta(chess, 2, chess.functions).last;
   		console.log(move);
   		chess.move(move);
   		var result = {move: chess.fen()};
