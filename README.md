@@ -30,6 +30,7 @@ Interface for [mysql] Javascript package in [mysql.js]
 Merge sort implementation in [mergesort.js]
 
 ## Todos
+
 - More AI Algorithms
 - More Games
 
