@@ -28,6 +28,7 @@ Best children of the node sent.
 ---
 ### Chess Defensive Offensive
 Custom reinforcement for Chess, taking in consideration deffensive and offensive values. This algorith uses the [mysql.js] module to acces a table called `Moves` in the database `ChessDefOff`. The table is built like this:
+
 | board                                                    | move | defensive | offensive | counter |
 | :------------------------------------------------------: | :--: | :-------: | :-------: | :-----: |
 | rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -     | a3   |         0 |         0 |       2 |
@@ -35,6 +36,7 @@ Custom reinforcement for Chess, taking in consideration deffensive and offensive
 | rnbqkbnr/ppppppp1/8/7p/8/P7/1PPPPPPP/RNBQKBNR w KQkq h6  | b4   |         0 |         1 |       1 |
 | rnbqkbnr/ppppppp1/8/7p/1P6/P7/2PPPPPP/RNBQKBNR b KQkq b3 | a6   |        -3 |         1 |       1 |
 | rnbqkbnr/1pppppp1/p7/7p/1P6/P7/2PPPPPP/RNBQKBNR w KQkq - | c4   |        -3 |         1 |       1 |
+
 In this table, `board` is the state of the game, in which the first part represents the board, the second part the turn, the third part the posible castlings, and the forth part the en-passant. `move` is the move made. `defensive` is the defensive value, `offensive` is the offensive value. `counter` is the times this situation has happened.
 
 #### Reinforcement (Data Feed)
