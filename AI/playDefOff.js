@@ -23,6 +23,9 @@ var callback; //function to callback with the move as parameter
 
 //Function to receive the rows and values and select a next move
 var analyzeMoves = function (rows) {
+	//End the conection after recieving the values
+	mysql.end();
+
 	var zeroFix = 1;
 
 	if (rows.length > 0){
@@ -76,6 +79,5 @@ module.exports = function (chess, fun) {
 	var l = fen.lastIndexOf(" ", fen.lastIndexOf(" ") - 1);
 
 	mysql.createCon('localhost', 'root', '', 'ChessDefOff');
-	mysql.select('Moves', "*", 'board = \''  + fen.substr(0, l) + '\'' , analyze);
-	mysql.end();
+	mysql.selectAll('Moves', 'board = \''  + fen.substr(0, l) + '\'' , analyze);
 }

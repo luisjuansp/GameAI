@@ -117,17 +117,15 @@ var utility = function (chess) {
 	return value;
 };
 
-var functions = {
-	getChildren: getChildren,
-	terminal: terminal,
-	utility: utility
-};
-
 function Game () {
 	this.chess = new Chess();
 };
 
-Game.prototype.functions = functions;
+Game.prototype.functions = {
+	getChildren: getChildren,
+	terminal: terminal,
+	utility: utility
+};
 
 Game.prototype.fen = function () {
 	return this.chess.fen();

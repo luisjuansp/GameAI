@@ -11,17 +11,19 @@
  *      database - database name 
  *	insert: inserts data to the table
  *		table_name - name of the table
- *     	columns - columns to insert
- *      values - values to insert in the order of columns
+ *     	object - object to be inserted
  *	select: selects data from a table and makes a callback with the rows recieved
  *		table_name - name of the table
  *     	columns - columns to select
  *      where - where condition of the select
  *      callback - object with fun(callback function) and param(callback parameter)
+ *	selectAll: selects data from a table and makes a callback with the rows recieved
+ *		table_name - name of the table
+ *      where - where condition of the select
+ *      callback - object with fun(callback function) and param(callback parameter)
  *	transactionInsertUpdate: creates a connection to a database and returns the connetion
  *		table_name - name of the table
- *     	columns - columns to insert
- *      values - values to insert in the order of columns
+ *     	object - object to be inserted
  *		where - where condition of the select
  *		prepUpdate - object with fun(prepare update function) and param(prepare update parameter)
  *      callback - object with fun(callback function) and param(callback parameter)
@@ -40,10 +42,23 @@ module.exports.createCon = function (host, user, password, database) {
 		database : database
 	});
 	connection.connect();
-	return connection;
 }
 
-module.exports.insert = function (table_name, columns, values) {
+function getColumnsAndValues (object) {
+	var keys = Object.keys(object);
+	var values = '';
+	for(var k in keys){
+		values += '\'' + object[keys[k]] + '\',';
+	}
+	values = values.substr(0, values.length - 1);
+	return {keys: keys.join(), values: values};
+}
+
+module.exports.insert = function (table_name, object) {
+	var obj = getColumnsAndValues(object);
+	var columns = obj.keys;
+	var values = obj.values;
+
 	connection.query('INSERT INTO '+ table_name + ' (' + columns + ')' + 'VALUES (' + values + ');', function(err, rows, fields) {
 		if (err) throw err;
 	});
@@ -56,8 +71,19 @@ module.exports.select = function (table_name, columns, where, callback) {
 	});
 }
 
+module.exports.selectAll = function (table_name, where, callback) {
+	connection.query('SELECT * FROM ' + table_name + ' WHERE ' + where + ';', function(err, rows, fields) {
+		if (err) throw err;
+		callback.fun(rows, callback.param);
+	});
+}
+
 //Updates rows if the where condition returns any, if not, it inserts a new row with the recieved values
-module.exports.transactionInsertUpdate = function (table_name, columns, values, where, prepUpdate, callback) {
+module.exports.transactionInsertUpdate = function (table_name, object, where, prepUpdate, callback) {
+	var obj = getColumnsAndValues(object);
+	var columns = obj.keys;
+	var values = obj.values;
+
 	connection.beginTransaction(function(err) {
 		if (err) throw err;
 

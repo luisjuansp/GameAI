@@ -1,50 +1,84 @@
-# GameAI
-Playground for AI algorithms in diferent games. This algorithms are implemented in javascript in the Node.js enviroment.
+# Games:
+## Chess
+Extends [chess.js] by [jhlywa] for the chess logic. Adds a parameter called functions, which includes:
 
-## Algorithms:
-### Alpha Beta Pruning: 
-Basic MinMax algorithm with Alpha Beta optimization in [alphabeta.js].
-
-#### Exports: 
-```js
-function chooseBest(node, depth, functions)
+```javascript
+Game.prototype.functions = {
+  getChildren: getChildren,
+  terminal: terminal,
+  utility: utility
+};
 ```
-**Returns** the node with the best move available
-- node: initial node to expand
-- depth: number of levels to expand, <=0 means infinite
-- functions: object with the required functions:
-    - getChildren(node): returns the children nodes from a node
-    - terminal(node): returns true if the node is terminal
-    - utility(node): return the heuristic utility of the node in its current state
 
-## Games:
-### Chess
-Chess implementation in [main.js], makes usage of [chess.js] by [jhlywa] for the chess logic, and [chessboardjs] by [oakmac] for the graphic representation of the game in the client side. Uses [express] in the server side.
+#### Get Children
+Searchs for the posible moves.
+```javascript
+var getChildren = function (chess) {...}
+```
+##### Params:
+**chess**:  
+Current chess object.  
 
-### TicTacToe
-TicTacToe implementation in [tictactoe.js]. Makes usage of [TicTacToeJS] by [ryanhs], modified in [games/TicTacToe.js].
+##### Returns:
+An array of game states.  
 
-## Todos
+---
+#### Terminal
+Checks to see if the game has ended.
+```javascript
+var terminal = function (chess) {...}
+```
+##### Params:
+**chess**:  
+Current chess object. 
 
-- More AI Algorithms
-- More Games
+##### Returns:
+Boolean representing if the game is over.  
 
-## License
-MIT
+---
+#### Create Connection
+Creates a connection to the database with the given parameters.
+```javascript
+var utility = function (chess) {...}
+```
+##### Params:
+**chess**:  
+Current chess object. 
+
+##### Returns:
+Evaluation of the current state.  
+
+## TicTacToe
+Modifies to [TicTacToeJS] by [ryanhs], adds a clone function to make a deep copy of the game.
+
+---
+#### Clone
+Modifies the current object by deeply copying the object in the parameters.
+```javascript
+game.clone = function(other) {...}
+```
+##### Params:
+**other**:  
+Object to clone from.  
+
+##### Returns:
+Nothing.  
+
+---
+#### Deep Copy
+Creates a deep copy of an object.
+```javascript
+function deepCopy(obj) {...}
+```
+##### Params:
+**obj**:  
+Object to copy.  
+
+##### Returns:
+Copy of the object.  
 
 
-**Free Software, Hell Yeah!**
-
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
-
-   [express]: <http://expressjs.com>
-   [alphabeta.js]: <https://github.com/luisjuansp/GameAI/blob/master/AI/alphabeta.js>
-   [main.js]: <https://github.com/luisjuansp/GameAI/blob/master/main.js>
    [chess.js]: <https://github.com/jhlywa/chess.js>
    [jhlywa]: <https://github.com/jhlywa>
-   [chessboardjs]: <https://github.com/oakmac/chessboardjs/>
-   [oakmac]: <https://github.com/oakmac/>
-   [tictactoe.js]: <https://github.com/luisjuansp/GameAI/blob/master/tictactoe.js>
    [TicTacToeJS]: <https://github.com/ryanhs/TicTacToeJS>
    [ryanhs]: <https://github.com/ryanhs/>
-   [games/TicTacToe.js]: <https://github.com/luisjuansp/GameAI/blob/master/games/TicTacToe.js>

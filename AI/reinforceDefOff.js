@@ -31,20 +31,13 @@ var reinforce = {};
 //Callback function to be called by transactionInstertUpdate to continue the game reinforcement
 reinforce.fun = function (index) {
 	if(index < history.length){
-		//Prepare the data for transaction
 		var state = history[index];
-		var keys = Object.keys(state);
-		var values = '';
-		for(var k in keys){
-			values += '\'' + state[keys[k]] + '\',';
-		}
-		values = values.substr(0, values.length - 1);
 
 		//Add parameters for the respective callbacks to the functions
 		prepUpdate.param = state;
 		reinforce.param = index + 1;
 
-		mysql.transactionInsertUpdate('Moves', keys.join(), values,
+		mysql.transactionInsertUpdate('Moves', state,
 			'board = \''  + state.board + '\' && move =\'' + state.move +'\'' , prepUpdate, reinforce);
 	} else {
 		//Reinforcement is done
